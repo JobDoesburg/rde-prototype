@@ -1,4 +1,4 @@
-version: 3
+version: '3'
 services:
     nginx:
         container_name: nginx
@@ -18,7 +18,7 @@ services:
             - ./rde-keyserver/media/:/keyserver/media/
             - ./rde-keyserver/static/:/keyserver/static/:ro
         environment:
-            ENABLE_IPV6: true
+            ENABLE_IPV6: 'true'
             DEFAULT_HOST: keyserver.rde.jobdoesburg.dev
 
     letsencrypt:
