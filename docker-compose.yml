@@ -1,0 +1,60 @@
+version: 3
+services:
+    nginx:
+        container_name: nginx
+        image: jwilder/nginx-proxy
+        restart: unless-stopped
+        ports:
+            - "80:80"
+            - "443:443"
+        volumes:
+            - /var/run/docker.sock:/tmp/docker.sock:ro
+            - ./nginx/html/:/usr/share/nginx/html/
+            - ./nginx/conf.d/:/etc/nginx/conf.d/
+            - ./nginx/certs/:/etc/nginx/certs/:ro
+            - ./nginx/vhost.d/:/etc/nginx/vhost.d/
+            - ./nginx/dhparam/:/etc/nginx/dhparam/
+            - ./keyserver.nginx.conf:/etc/nginx/vhost.d/keyserver.rde.jobdoesburg.dev:ro
+            - ./rde-keyserver/media/:/keyserver/media/
+            - ./rde-keyserver/static/:/keyserver/static/:ro
+        environment:
+            ENABLE_IPV6: true
+            DEFAULT_HOST: keyserver.rde.jobdoesburg.dev
+
+    letsencrypt:
+        image: jrcs/letsencrypt-nginx-proxy-companion
+        restart: unless-stopped
+        depends_on:
+            - nginx
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+            - ./nginx/html/:/usr/share/nginx/html/
+            - ./nginx/conf.d/:/etc/nginx/conf.d/
+            - ./nginx/vhost.d/:/etc/nginx/vhost.d/
+            - ./nginx/dhparam/:/etc/nginx/dhparam/
+            - ./nginx/certs/:/etc/nginx/certs/
+        environment:
+            NGINX_PROXY_CONTAINER: nginx
+            DEFAULT_EMAIL: keyserver.rde@jobdoesburg.dev
+
+    keyserver:
+        build: ./rde-keyserver
+        restart: unless-stopped
+        volumes:
+            - ./rde-keyserver/media/:/code/media/
+            - ./rde-keyserver/static/:/code/static/
+        environment:
+            VIRTUAL_HOST: keyserver.rde.jobdoesburg.dev
+            VIRTUAL_PROTO: uwsgi
+            VIRTUAL_PORT: 8000
+            LETSENCRYPT_HOST: keyserver.rde.jobdoesburg.dev
+            LETSENCRYPT_EMAIL: keyserver.rde@jobdoesburg.dev
+
+    proxyserver:
+        build: ./rde-client-proxyserver
+        restart: unless-stopped
+        environment:
+            VIRTUAL_HOST: proxyserver.rde.jobdoesburg.dev
+            VIRTUAL_PORT: 5000
+            LETSENCRYPT_HOST: proxyserver.rde.jobdoesburg.dev
+            LETSENCRYPT_EMAIL: proxyserver.rde@jobdoesburg.dev

@@ -1,0 +1,6 @@
+[submodule "rde-client-proxyserver"]
+	path = rde-client-proxyserver
+	url = git@gitlab.surf.nl:filesender/rde-client-proxyserver.git
+[submodule "rde-keyserver"]
+	path = rde-keyserver
+	url = git@gitlab.surf.nl:filesender/rde-keyserver.git
