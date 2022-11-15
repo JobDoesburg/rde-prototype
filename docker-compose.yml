@@ -15,6 +15,7 @@ services:
             - ./nginx/vhost.d/:/etc/nginx/vhost.d/
             - ./nginx/dhparam/:/etc/nginx/dhparam/
             - ./keyserver.nginx.conf:/etc/nginx/vhost.d/keyserver.rde.jobdoesburg.dev:ro
+            - ./proxyserver.nginx.conf:/etc/nginx/vhost.d/proxyserver.rde.jobdoesburg.dev:ro
             - ./rde-keyserver/media/:/keyserver/media/
             - ./rde-keyserver/static/:/keyserver/static/:ro
         environment:
@@ -43,6 +44,8 @@ services:
         volumes:
             - ./rde-keyserver/media/:/code/media/
             - ./rde-keyserver/static/:/code/static/
+            - ./rde-keyserver/saml-certs/:/code/keyserver/config/saml/
+            - ./rde-keyserver/db.sqlite3:/code/keyserver/db.sqlite3
         environment:
             VIRTUAL_HOST: keyserver.rde.jobdoesburg.dev
             VIRTUAL_PROTO: uwsgi
