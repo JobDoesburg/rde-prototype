@@ -4,3 +4,6 @@
 [submodule "rde-keyserver"]
 	path = rde-keyserver
 	url = git@gitlab.surf.nl:filesender/rde-keyserver.git
+[submodule "rde-demo/rde-js-client"]
+	path = rde-demo/rde-js-client
+	url = git@gitlab.surf.nl:filesender/rde-js-client.git

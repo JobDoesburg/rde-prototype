@@ -58,3 +58,11 @@ services:
             VIRTUAL_PORT: 5000
             LETSENCRYPT_HOST: proxyserver.rde.jobdoesburg.dev
             LETSENCRYPT_EMAIL: proxyserver.rde@jobdoesburg.dev
+    demo:
+        build: ./rde-demo
+        restart: unless-stopped
+        environment:
+            VIRTUAL_HOST: demo.rde.jobdoesburg.dev
+            VIRTUAL_PORT: 80
+            LETSENCRYPT_HOST: demo.rde.jobdoesburg.dev
+            LETSENCRYPT_EMAIL: demo.rde@jobdoesburg.dev
