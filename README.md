@@ -1,4 +1,4 @@
-# RDE POC server config
+# RDE prototype
 This repository contains simple docker-compose configuration for the proof-of-concept RDE prototype.
 It contains submodules for different components of the RDE prototype.
 
