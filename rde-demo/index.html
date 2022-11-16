@@ -13,8 +13,8 @@
             <h1>RDE browser encryption</h1>
             <div>
                 <h3 class="mt-3">Enrollment</h3>
-                <p>Using keyserver at <code>https://keyserver.rde.jobdoesburg.dev</code></p>
-                <a href="https://keyserver.rde.jobdoesburg.dev" target="_blank" class="btn btn-primary">Enroll a new RDE document</a>
+                <p>Using keyserver at <code id="keyserverUsingURL"></code></p>
+                <a href="" target="_blank" class="btn btn-primary" id="keyserverEnrollButton">Enroll a new RDE document</a>
                 <hr>
                 <h3 class="mt-3">Key generation</h3>
                 <div class="mb-3">
@@ -37,7 +37,7 @@
                 </div>
                 <hr>
                 <h3 class="mt-3">Key retrieval</h3>
-                <p>Using proxy server at <code>https://proxyserver.rde.jobdoesburg.dev</code></p>
+                <p>Using proxy server at <code id="proxyserverUsingURL"></code></p>
                 <button id="decryptHandshake" type="submit" class="btn btn-primary">Start decryption handshake</button>
                 <div id="qrcode" class="my-3"></div>
                 <div class="mb-3">
@@ -52,6 +52,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="rde-js-client/dist/RDEKeyGen.js"></script>
 <script src="rde-js-client/dist/RDEDecryption.js"></script>
+<script src="demo.config.js"></script>
 <script src="demo.js"></script>
 </body>
 </html>

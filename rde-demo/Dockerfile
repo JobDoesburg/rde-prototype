@@ -13,5 +13,6 @@ RUN npm run build
 FROM nginx:alpine
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html/rde-js-client/dist
 COPY index.html /usr/share/nginx/html/index.html
-COPY demo.js /usr/share/nginx/html/rde-js-client/dist/demo.js
+COPY demo.js /usr/share/nginx/html/demo.js
+COPY demo.config.js /usr/share/nginx/html/demo.config.js
 EXPOSE 80

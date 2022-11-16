@@ -1,7 +1,3 @@
-const KEYSERVER = "https://keyserver.rde.jobdoesburg.dev"
-const PROXYSERVER = "https://proxyserver.rde.jobdoesburg.dev"
-const PROXYSERVERWS = "wss://proxyserver.rde.jobdoesburg.dev"
-
 const emailField = document.getElementById('email');
 const searchButton = document.getElementById('search');
 const enrollmentParamsField = document.getElementById('enrollmentParams');
@@ -9,10 +5,15 @@ const generateButton = document.getElementById('keygen');
 const keyField = document.getElementById('key');
 const decryptionParamsField = document.getElementById('decryptionParams');
 const retrievedKeyField = document.getElementById('retrievedKey');
-
 const qrCodes = document.getElementById("qrcode");
-
 const decryptHandshakeButton = document.getElementById('decryptHandshake');
+const keyserverUsingURL = document.getElementById('keyserverUsingURL');
+keyserverUsingURL.innerText = KEYSERVER
+const proxyserverUsingURL = document.getElementById('proxyserverUsingURL');
+proxyserverUsingURL.innerText = PROXYSERVER
+const keyserverEnrollButton = document.getElementById('keyserverEnrollButton');
+keyserverEnrollButton.href = KEYSERVER
+
 
 let handshake;
 let rdeKey;
