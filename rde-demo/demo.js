@@ -18,11 +18,19 @@ keyserverEnrollButton.href = KEYSERVER
 let handshake;
 let rdeKey;
 
+function toHexString(byteArray) {
+    let s = '';
+    byteArray.forEach(function(byte) {
+        s += ('0' + (byte & 0xFF).toString(16)).slice(-2);
+    });
+    return s;
+}
+
 async function generateKey() {
     const enrollmentData = RDEKeyGen.RDEEnrollmentParameters.fromJson(enrollmentParamsField.value)
     const keyGenerator = new RDEKeyGen.RDEKeyGenerator(enrollmentData)
     rdeKey = await keyGenerator.generateKey()
-    keyField.innerText = rdeKey.encryptionKey
+    keyField.innerText = toHexString(rdeKey.encryptionKey)
     decryptionParamsField.innerText = JSON.stringify(rdeKey.decryptionParameters)
 }
 
@@ -59,7 +67,8 @@ async function decryptHandshake() {
     }
     socket.onclose = function (event) {
         console.log("Connection closed", event)
-        retrievedKeyField.innerText = handshake.getRetrievedKey()
+        const key = handshake.getRetrievedKey()
+        retrievedKeyField.innerText = toHexString(key)
         qrCodes.innerHTML = ""
     }
     socket.onerror = function (event) {
