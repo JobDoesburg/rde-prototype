@@ -1,6 +1,8 @@
 const emailField = document.getElementById('email');
 const searchButton = document.getElementById('search');
 const enrollmentParamsField = document.getElementById('enrollmentParams');
+const verifyButton = document.getElementById('verify');
+const mrzDataField = document.getElementById('mrzData');
 const generateButton = document.getElementById('keygen');
 const keyField = document.getElementById('key');
 const decryptionParamsField = document.getElementById('decryptionParams');
@@ -18,6 +20,14 @@ keyserverEnrollButton.href = KEYSERVER
 let handshake;
 let rdeKey;
 
+async function verify() {
+    const enrollmentData = RDEKeyGen.RDEEnrollmentParameters.fromJson(enrollmentParamsField.value)
+    console.log("Enrollment data", enrollmentData)
+    const mrzData = enrollmentData.getMRZData()
+    console.log("MRZ data", mrzData)
+    mrzDataField.innerText = JSON.stringify(mrzData)
+    await enrollmentData.verifySecurityData()
+}
 
 async function generateKey() {
     const enrollmentData = RDEKeyGen.RDEEnrollmentParameters.fromJson(enrollmentParamsField.value)
@@ -34,7 +44,7 @@ async function search() {
     if (data == null)
         enrollmentParamsField.innerText = "No enrollment parameters found for this email address"
     else
-        enrollmentParamsField.innerText = JSON.stringify(data[0]["enrollment_parameters"])
+        enrollmentParamsField.innerText = JSON.stringify(data[data.length-1]["enrollment_parameters"])
 }
 
 async function startHandshake(socket, url) {
@@ -71,6 +81,7 @@ async function decryptHandshake() {
 }
 
 searchButton.addEventListener('click', search);
+verifyButton.addEventListener('click', verify);
 generateButton.addEventListener('click', generateKey);
 decryptHandshakeButton.addEventListener('click', decryptHandshake);
 

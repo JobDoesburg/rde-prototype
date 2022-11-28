@@ -19,12 +19,17 @@
                 <h3 class="mt-3">Key generation</h3>
                 <div class="mb-3">
                     <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="email">
+                    <input type="email" class="form-control" id="email" name="email" value="j.doe@example.com">
                 </div>
                 <button id="search" type="submit" class="btn btn-primary">Search for enrollment parameters for email</button>
                 <div class="mb-3">
                     <label for="enrollmentParams" class="form-label">Enrollment parameters</label>
                     <textarea class="form-control" id="enrollmentParams" name="enrollmentParams" rows="3"></textarea>
+                </div>
+                <button id="verify" type="submit" class="btn btn-primary">Verify enrollment parameters</button>
+                <div class="mb-3">
+                    <label for="mrzData" class="form-label">MRZ data</label>
+                    <textarea class="form-control" id="mrzData" name="mrzData" rows="3" disabled></textarea>
                 </div>
                 <button id="keygen" type="submit" class="btn btn-primary">Generate key</button>
                 <div class="mb-3">
