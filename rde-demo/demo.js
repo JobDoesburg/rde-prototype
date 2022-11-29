@@ -26,7 +26,7 @@ async function verify() {
     const mrzData = enrollmentData.getMRZData()
     console.log("MRZ data", mrzData)
     mrzDataField.innerText = JSON.stringify(mrzData)
-    await enrollmentData.verifySecurityData()
+    await enrollmentData.verify()
 }
 
 async function generateKey() {
