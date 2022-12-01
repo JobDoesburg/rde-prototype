@@ -88,7 +88,7 @@ async function verify() {
         return
     }
 
-    const certificateMasterList = await parseCertificateMasterList(CERTIFICATE_MASTER_LIST_URL)
+    const certificateMasterList = await parseCertificateMasterList(CERTIFICATE_MASTER_LIST_URL) // TODO also check CRL's
 
     const verifyResult = await enrollmentData.verify(certificateMasterList)
 
@@ -125,6 +125,35 @@ async function verify() {
     } else {
         verificationAlert('Enrollment data is invalid', 'danger')
     }
+
+    if (enrollmentData.faceImageData) {
+        const faceImageData = enrollmentData.parseFaceImage();
+        displayFaceImage(faceImageData, "jp2");
+    }
+}
+
+function displayFaceImage(imageData, imageType) {
+    const rgbImage = openjpeg(imageData, imageType)
+    const canvas = document.getElementById('faceImageCanvas');
+    canvas.width = rgbImage.width;
+    canvas.height = rgbImage.height;
+    const pixelsPerChannel = rgbImage.width * rgbImage.height;
+    const context = canvas.getContext('2d');
+    const rgbaImage = context.createImageData(rgbImage.width, rgbImage.height);
+
+    let i = 0, j = 0;
+    while (i < rgbaImage.data.length && j < pixelsPerChannel) {
+        rgbaImage.data[i] = rgbImage.data[j]; // R
+        rgbaImage.data[i+1] = rgbImage.data[j + pixelsPerChannel]; // G
+        rgbaImage.data[i+2] = rgbImage.data[j + 2*pixelsPerChannel]; // B
+        rgbaImage.data[i+3] = 255; // A
+
+        // Next pixel
+        i += 4;
+        j += 1;
+    }
+    context.putImageData(rgbaImage, 0, 0);
+    canvas.style.display = "block";
 }
 
 async function generateKey() {

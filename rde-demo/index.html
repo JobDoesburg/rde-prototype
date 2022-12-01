@@ -31,6 +31,7 @@
                     <textarea class="form-control" id="enrollmentParams" name="enrollmentParams" rows="3"></textarea>
                 </div>
                 <div id="verificationResultPlaceholder"></div>
+                <canvas id="faceImageCanvas" class="mb-3" style="display: none"></canvas>
                 <button id="keygen" type="submit" class="btn btn-primary mb-3">Generate key</button>
                 <div class="mb-3">
                     <label for="key" class="form-label">Key</label>
@@ -57,6 +58,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="rde-js-client/dist/RDEKeyGen.js"></script>
 <script src="rde-js-client/dist/RDEDecryption.js"></script>
+<script src="openjpeg.js"></script>
 <script src="demo.config.js"></script>
 <script src="demo.js"></script>
 </body>
