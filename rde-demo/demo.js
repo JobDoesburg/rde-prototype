@@ -11,7 +11,6 @@ const qrCodes = document.getElementById("qrcode");
 const decryptHandshakeButton = document.getElementById('decryptHandshake');
 const faceImageCanvas = document.getElementById('faceImageCanvas');
 
-
 const keyserverUsingURL = document.getElementById('keyserverUsingURL');
 keyserverUsingURL.innerText = KEYSERVER;
 const proxyserverUsingURL = document.getElementById('proxyserverUsingURL');
@@ -25,10 +24,9 @@ let rdeKey;
 
 async function parseCertificateMasterList(url) {
     const certData = await fetch(url).then(response => response.json());
-    const certs = certData.map(cert => {
+    return certData.map(cert => {
         return new RDEKeyGen.X509Certificate(cert)
     })
-    return certs
 }
 
 async function search() {
@@ -51,8 +49,8 @@ async function search() {
             documentSelectField.appendChild(option);
         }
 
-        documentSelectField.value = data.length-1
-        enrollmentParamsField.innerText = JSON.stringify(data[data.length-1]["enrollment_parameters"])
+        documentSelectField.value = 0
+        enrollmentParamsField.innerText = JSON.stringify(data[0]["enrollment_parameters"])
     }
     await choose()
 }
@@ -63,14 +61,14 @@ async function choose() {
 }
 
 const verificationAlert = (message, type) => {
-    const wrapper = document.createElement('div')
-    wrapper.innerHTML = [
+    verificationResultPlaceholder.innerHTML = ''
+    const alert = document.createElement('div')
+    alert.innerHTML = [
         `<div class="alert alert-${type}" role="alert">`,
         `   <div>${message}</div>`,
         '</div>'
     ].join('')
-    verificationResultPlaceholder.innerHTML = ''
-    verificationResultPlaceholder.append(wrapper)
+    verificationResultPlaceholder.append(alert)
 }
 
 function sixDigitDateToDate(dateString) {
