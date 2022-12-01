@@ -9,6 +9,8 @@ const decryptionParamsField = document.getElementById('decryptionParams');
 const retrievedKeyField = document.getElementById('retrievedKey');
 const qrCodes = document.getElementById("qrcode");
 const decryptHandshakeButton = document.getElementById('decryptHandshake');
+const faceImageCanvas = document.getElementById('faceImageCanvas');
+
 
 const keyserverUsingURL = document.getElementById('keyserverUsingURL');
 keyserverUsingURL.innerText = KEYSERVER;
@@ -80,7 +82,11 @@ function sixDigitDateToDate(dateString) {
 }
 
 async function verify() {
+    faceImageCanvas.style.display = "none";
+    verificationResultPlaceholder.innerHTML = ''
+
     const enrollmentData = RDEKeyGen.RDEEnrollmentParameters.fromJson(enrollmentParamsField.value)
+
     console.log("Enrollment data", enrollmentData)
 
     if (enrollmentData.securityData == null) {
@@ -134,11 +140,10 @@ async function verify() {
 
 function displayFaceImage(imageData, imageType) {
     const rgbImage = openjpeg(imageData, imageType)
-    const canvas = document.getElementById('faceImageCanvas');
-    canvas.width = rgbImage.width;
-    canvas.height = rgbImage.height;
+    faceImageCanvas.width = rgbImage.width;
+    faceImageCanvas.height = rgbImage.height;
     const pixelsPerChannel = rgbImage.width * rgbImage.height;
-    const context = canvas.getContext('2d');
+    const context = faceImageCanvas.getContext('2d');
     const rgbaImage = context.createImageData(rgbImage.width, rgbImage.height);
 
     let i = 0, j = 0;
@@ -153,7 +158,7 @@ function displayFaceImage(imageData, imageType) {
         j += 1;
     }
     context.putImageData(rgbaImage, 0, 0);
-    canvas.style.display = "block";
+    faceImageCanvas.style.display = "block";
 }
 
 async function generateKey() {
