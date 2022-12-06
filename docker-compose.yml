@@ -9,34 +9,14 @@ services:
             - "443:443"
         volumes:
             - /var/run/docker.sock:/tmp/docker.sock:ro
-            - ./nginx/html/:/usr/share/nginx/html/
-            - ./nginx/conf.d/:/etc/nginx/conf.d/
-            - ./nginx/certs/:/etc/nginx/certs/:ro
-            - ./nginx/vhost.d/:/etc/nginx/vhost.d/
-            - ./nginx/dhparam/:/etc/nginx/dhparam/
-            - ./keyserver.nginx.conf:/etc/nginx/vhost.d/keyserver.rde.jobdoesburg.dev:ro
-            - ./proxyserver.nginx.conf:/etc/nginx/vhost.d/proxyserver.rde.jobdoesburg.dev:ro
+            - ./certs/nginx/:/etc/nginx/certs/:ro
+            - ./keyserver.nginx.conf:/etc/nginx/vhost.d/keyserver.rde.filesenderbeta.surf.nl:ro
+            - ./proxyserver.nginx.conf:/etc/nginx/vhost.d/proxy.rde.filesenderbeta.surf.nl:ro
             - ./rde-keyserver/media/:/keyserver/media/
             - ./rde-keyserver/static/:/keyserver/static/:ro
         environment:
             ENABLE_IPV6: 'true'
-            DEFAULT_HOST: keyserver.rde.jobdoesburg.dev
-
-    letsencrypt:
-        image: jrcs/letsencrypt-nginx-proxy-companion
-        restart: unless-stopped
-        depends_on:
-            - nginx
-        volumes:
-            - /var/run/docker.sock:/var/run/docker.sock:ro
-            - ./nginx/html/:/usr/share/nginx/html/
-            - ./nginx/conf.d/:/etc/nginx/conf.d/
-            - ./nginx/vhost.d/:/etc/nginx/vhost.d/
-            - ./nginx/dhparam/:/etc/nginx/dhparam/
-            - ./nginx/certs/:/etc/nginx/certs/
-        environment:
-            NGINX_PROXY_CONTAINER: nginx
-            DEFAULT_EMAIL: keyserver.rde@jobdoesburg.dev
+            DEFAULT_HOST: keyserver.rde.filesenderbeta.surf.nl
 
     keyserver:
         build: ./rde-keyserver
@@ -44,28 +24,22 @@ services:
         volumes:
             - ./rde-keyserver/media/:/code/media/
             - ./rde-keyserver/static/:/code/static/
-            - ./rde-keyserver/saml-certs/:/code/keyserver/config/saml/
-            - ./rde-keyserver/db.sqlite3:/code/keyserver/db.sqlite3
+            - ./certs/saml:/code/keyserver/config/saml/
+            - ./keyserver-db.sqlite3:/code/keyserver/db.sqlite3
         environment:
-            VIRTUAL_HOST: keyserver.rde.jobdoesburg.dev
+            VIRTUAL_HOST: keyserver.rde.filesenderbeta.surf.nl
             VIRTUAL_PROTO: uwsgi
             VIRTUAL_PORT: 8000
-            LETSENCRYPT_HOST: keyserver.rde.jobdoesburg.dev
-            LETSENCRYPT_EMAIL: keyserver.rde@jobdoesburg.dev
 
     proxyserver:
         build: ./rde-client-proxyserver
         restart: unless-stopped
         environment:
-            VIRTUAL_HOST: proxyserver.rde.jobdoesburg.dev
+            VIRTUAL_HOST: proxy.rde.filesenderbeta.surf.nl
             VIRTUAL_PORT: 5000
-            LETSENCRYPT_HOST: proxyserver.rde.jobdoesburg.dev
-            LETSENCRYPT_EMAIL: proxyserver.rde@jobdoesburg.dev
     demo:
         build: ./rde-demo
         restart: unless-stopped
         environment:
-            VIRTUAL_HOST: demo.rde.jobdoesburg.dev
+            VIRTUAL_HOST: demo.rde.filesenderbeta.surf.nl
             VIRTUAL_PORT: 80
-            LETSENCRYPT_HOST: demo.rde.jobdoesburg.dev
-            LETSENCRYPT_EMAIL: demo.rde@jobdoesburg.dev
