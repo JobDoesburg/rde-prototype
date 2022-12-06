@@ -12,8 +12,8 @@ services:
             - ./certs/nginx/:/etc/nginx/certs/:ro
             - ./keyserver.nginx.conf:/etc/nginx/vhost.d/keyserver.rde.filesenderbeta.surf.nl:ro
             - ./proxyserver.nginx.conf:/etc/nginx/vhost.d/proxy.rde.filesenderbeta.surf.nl:ro
-            - ./rde-keyserver/media/:/keyserver/media/
-            - ./rde-keyserver/static/:/keyserver/static/:ro
+            - ./keyserver-media/:/keyserver/media/
+            - ./keyserver-static/:/keyserver/static/:ro
         environment:
             ENABLE_IPV6: 'true'
             DEFAULT_HOST: keyserver.rde.filesenderbeta.surf.nl
@@ -22,8 +22,8 @@ services:
         build: ./rde-keyserver
         restart: unless-stopped
         volumes:
-            - ./rde-keyserver/media/:/code/media/
-            - ./rde-keyserver/static/:/code/static/
+            - ./keyserver-media/:/code/media/
+            - ./keyserver-static/:/code/static/
             - ./certs/saml:/code/keyserver/config/saml/
             - ./keyserver-db.sqlite3:/code/keyserver/db.sqlite3
         environment:
