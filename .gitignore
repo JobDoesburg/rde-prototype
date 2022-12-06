@@ -1,1 +1,4 @@
 /.idea/
+certs/
+keyserver-db.sqlite3
+keyserver-static/
