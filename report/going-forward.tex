@@ -1,0 +1,64 @@
+\chapter{Going forward}
+\label{ch:going-forward}
+In this chapter, we will discuss the next steps that need to be taken to bring the current prototype to a production-ready state, partially in addition to remarks that were made in the previous chapters.
+
+\section{Key server}
+\label{sec:key-server}
+Most notably, a production-ready RDE key server needs to be developed, and possibly integrated into existing applications.
+The whole enrollment process needs to be reworked to be more user-friendly and more secure.
+We refer to the previous chapter for more details on this.
+
+\section{User interface and user experience}
+\label{sec:user-interface-and-user-experience}
+The current prototype is a proof-of-concept, and thus, the user interface is not very user-friendly.
+Errors are not handled very well, and the user is not informed about what is going on.
+This needs to be improved.
+
+Specifically the term `Remote Document Encryption' is not very user-friendly, and should be replaced with something more descriptive, such as `Passport/ID-based encryption'.
+Terms like `security data', `MRZ data` and `facial image' should be replaced with better terms.
+Regarding the MRZ data specifically, those terms should make clear to users the privacy implications of sharing this data.
+Users should know that this data contains their full name, nationality, sex, date of birth, and document number, and understand the implications of publishing this data.
+But they should also understand that reading this data does not make it possible to commit identity theft.
+
+\section{OCR in the reader application}
+\label{sec:ocr-in-the-reader-application}
+In order for the reader app to communicate with the e-passport, it needs to know the BAC key of the document (or the CAN, if the document has a CAN).
+This BAC key is based on the document number, date of birth and expiry date of the document.
+Currently, the reader application asks the user to enter this data manually.
+This is not very user-friendly.
+Instead, the reader application should be able to read this data from the printed MRZ on the document.
+This can be done using optical character recognition (OCR).
+For privacy reasons, this OCR should be done locally on the user's device, and not on a remote server, as the MRZ data could contain the personal number of the document holder (that SURF is not allowed to process).
+
+\section{iOS support}
+\label{sec:ios-support}
+For the prototype, we have only developed a reader application for Android.
+However, the same reader application should also be developed for iOS.
+This is not trivial, as a powerful library like JMRTD is not available for iOS (in face, iOS just recently gave developers low level access to the NFC chip).
+The \textsf{AndyQ/NFCPassportReader}\footnote{\url{https://github.com/AndyQ/NFCPassportReader}} library is available for iOS and seems to implement all the functionality that we need.
+
+\section{Support for more document types (drivers licenses)}
+\label{sec:support-for-more-document-types}
+Currently, the prototype only supports e-passports and e-ID cards.
+In The Netherlands, however, there are also e-driver's licenses, and e-residence permits.
+It is almost certain that these documents can be used for RDE as well (with minimal changes to the reader app), but this has not yet been implemented.
+
+\section{Encrypting for multiple keys}
+\label{sec:encrypting-for-multiple-keys}
+The current implementation allows senders to choose to encrypt files for a single document.
+There might, however, be applications where it is useful to encrypt for multiple documents. 
+For example, if a transfer should be available to multiple people, but perhaps more importantly, if one person should be able to decrypt a transfer with either one of his documents (passport, identity card, drivers license).
+This could greatly improve usability. 
+In order to achieve this, the integration of RDE within the encryption scheme of FileSender should be changed.
+Instead of using the secret key from RDE directly for encrypting the files (after PBKDF2), files instead should be encrypted with a different key, and the RDE secret key should in its turn encrypt this key.
+This way, multiple RDE keys can be generated, all to encrypt the file encryption key, so that multiple documents can ultimately decrypt the same transfered files.
+
+When such changes are made to the FileSender integration, it would also be beneficial to not use PBKDF2 at all for RDE, as it is not required and does not truly offer additional security.
+
+ \section{Support for more ciphers}
+\label{sec:support-for-more-ciphers}
+Currently, the response emulation in RDE key generation step only supports ECDH for Chip Authentication key agreement with AES based ciphers after the key agreement.
+This covers by far the most commonly used passports.
+According to the ICAO specifications, however, there are also passports that use RSA-based DH for key agreement, and DES based ciphers after the key agreement~\cite{icao9303securitymechanisms}.
+A first step would thus be to investigate what countries actually use these passports, and then decide whether those should be supported or not.
+One could also argue that these passports are not very secure, and thus, we should not support them at all.

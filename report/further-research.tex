@@ -1,0 +1,57 @@
+\chapter{Further research}
+\label{ch:further-research}
+In this chapter, we will discuss the further research that can be done on the topic of application of Remote Document Encryption.
+These are more fundamental research questions, in contrast to the more implementation-related topics that were discussed in the previous chapter.
+
+\section{Split-key architecture}
+\label{sec:split-key-architecture}
+Currently, the decryption (key retrieval) step in RDE is based fully on the e-passport.
+The secret key is retrieved fully from the e-passport.
+
+This has some consequences.
+In case a user loses his e-passport, however, there is no way for them to revoke their passport.
+They surely could indicate at a key server that their passport is lost (after authenticating with their email, for example), hopefully preventing others from still using the passport's enrollment parameters to encrypt for.
+Already encrypted documents that are already out there, however, cannot be revoked.
+
+A possible solution to this problem is to use a split-key architecture.
+In such an architecture, the secret key would not only be based on the response of the e-passport, but also on a secret key that is stored on a key server.
+For decryption, the key server would thus also need to be involved.
+
+To revoke a document, the user would simply need to revoke the key on the key server, making any future decryption attempts fail.
+
+With such an infrastructure, also a PIN could be introduced that needs to be provided in order to unlock the key server's secret key part.
+Introduction of a PIN would give us even more security, as it prevents stolen or lost passports from being used to retrieve the secret message key.
+
+Note that this still does not bind the e-passport to a specific reader app.
+The reader app itself still does not need to store any secret data itself.
+
+\section{Biometric authentication}
+\label{sec:biometric-authentication}
+A PIN would be a nice addition to the RDE scheme, but it is not the only way to improve the security of the scheme.
+A PIN can still leak or be shared with others.
+An interesting alternative is to use biometric authentication.
+
+Currently, SURF's eduID project is working on a system that authenticates users with their passport and biometric data.
+This is based on a product from the company Verifai\footnote{\url{https://www.verifai.com}}.
+Verifai offers a so-called \emph{liveness check}\footnote{\url{https://docs.verifai.com/sdk/android/components/liveness-check}} to verify the user is indeed the document holder and is actually present.
+This is done by asking the user to blink, move their head, speak some words, and verifying this against the facial image in the passport.
+
+It could be interesting to use this liveness check to authenticate the document holder both at enrollment, but more importantly, at decryption.
+Only after the liveness check is performed, the key server, implementing a split-key architecture, should release its secret key part.
+A drawback of this approach, however, is that the Verifai liveness check is performed in-app, and thus requires a certified reader app (we need to trust the app to perform the liveness check correctly).
+This is a big change from the current prototype, where the reader app is not certified.
+
+\section{Other readers}
+\label{sec:other-readers}
+Currently, the prototype uses an Android app as reader for e-passports (and an iOS app is still to be developed).
+This is chosen as NFC-capable phones are commonly available at this moment.
+However, there is no reason why reading e-passports should be limited to phones.
+For example, a simple USB smart card reader could be used to read e-passports as well.
+
+It would be interesting to investigate if it is possible to interface with a USB smart card reader from a web browser, and if so, how this could be used to read e-passports.
+This way, using a reader app would not be required anymore.
+This would also further simplify the infrastructure, because no proxy server and decryption handshake between browser and reader app would be required anymore.
+
+
+
+

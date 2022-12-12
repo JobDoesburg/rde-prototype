@@ -1,0 +1,137 @@
+\chapter{RDE with document holder authentication}\label{ch:rde-with-document-holder-authentication}
+
+As mentioned earlier, the RDE scheme presented in~\cite{verheul2017remote} in its most basic form does not provide any authentication of the document holder.
+In this chapter we will explain how to add document holder authentication to the basic RDE scheme.
+This concept has already been presented in~\cite{verheul2020secure}.
+Our implementation, however, is different from the one presented in~\cite{verheul2020secure}.
+In this chapter, we will first elaborate on our implementation and then explain the differences.
+
+While the developed infrastructure will only be presented in the next chapter, we will already use the concept of a key server in this chapter.
+The key server is a partially trusted party that is responsible for storing the enrollment data of users (recipients).
+Senders can query the key server for the enrollment data for a recipient, for example based on the recipient's email address.
+Because the email address is not contained in the e-passport, the key server needs to verify the email address of the sender.
+As we will see, however, we do not need to further trust the key server for other claims on the user's identity, following our implementation.
+
+\section{RDE \textit{without} document holder authentication}\label{sec:rde-without-document-holder-authentication}
+The RDE scheme described before does provide us with the ability to generate a shared secret key between the sender and the receiver.
+However, as sender, you do not know if the receiver is the actual document holder.
+Upon requesting the enrollment data for a receiver from the keyserver, you do not have the ability to verify that this enrollment data actually belongs to the receiver, other than trusting the key server.
+The user could be using the passport of another user, for example, a passport that has expired or revoked by a government (possibly because it does not offer sufficient security), or even use an especially crafted fake passport of which copies can exist.
+
+This could give unfair security assumptions to the sender.
+In daily life, passports are primarily a means of identification and authentication.
+Any sender might thus falsely assume that with using RDE, the key server verified that the recipient is who they claim to be, while this is not the case.
+
+\section{Adding document holder authentication}\label{sec:adding-document-holder-authentication}
+Adding extra information about the document holder to the enrollment data turns out to be easy.
+Upon enrollment, we should not only extract the contents of the data group we want to use for RDE, but also the contents of the data group that contains the document holder's personal data.
+Most notably, this could be DG1, but it might also be interesting to include DG2, that includes the document holder's facial image.
+The enrollment data should then be extended to also contain the contents of these data groups.
+Most importantly, we should include the contents of EFsod.
+With this information, anyone can perform passive authentication, as mentioned in section~\ref{sec:passive-authentication} (checking hashes, signature, and certificate chain).
+This means that any party, including the key server itself, can verify that the enrollment data belongs to the actual document holder at any time.
+And because in RDE, Chip Authentication is performed, we also know that on decryption, the document actively authenticates itself too.
+
+This way, we do not only have the ability to generate a shared secret key between the sender and the receiver, but we immediately verify the document holder's identity via the governmental PKI.
+Because the RDE data group is bound to this information, this essentially guarantees that only the document holder (of anyone in possession of their document) can retrieve the secret key.
+Note that we can also check if the document has expired or been revoked by the government, as we can check the validity of the certificate chain.
+
+Following this approach leads basically to 4 levels of overall RDE security:
+\begin{enumerate}
+    \item \textbf{Basic RDE}:
+    The sender and receiver can generate a shared secret, but the sender does not have any guarantee on the integrity of the receiver's document or identity.
+    They could be using a fake, expired, or insecure document or a document of another person.
+    We fully trust the key server to provide us with the correct enrollment data for the receiver.
+    \item \textbf{RDE with EFsod}:
+    The sender and receiver can generate a shared secret, and the sender can verify that the receiver uses a valid document.
+    The document is not fake or expired and is issued by a genuine government from our trusted certificates.
+    We do still need to trust the key server to provide us with the correct enrollment data for the receiver.
+    \item \textbf{RDE with EFsod and MRZ data}:
+    Additionally, the sender can verify the recipient's identity using the identity information from DG1
+    We do not need to trust the key server anymore.
+    If the key server provides us with the wrong enrollment data, we can verify the identity of the document holder ourselves using the government PKI.
+    \item \textbf{RDE with EFsod, MRZ data and facial image}:
+    We can additionally verify the identity of the document holder using the facial image from DG2.
+    This gives us additional confirmation that the recipient is the person we expect them to be if we know their face.
+\end{enumerate}
+
+There is also a fifth option available, which is to only use the facial image from DG2 for authentication and not include the MRZ data.
+This can be an interesting option for when we do not want to disclose the identity information of the document holder, but do not care about disclosing the document holder's face.
+
+Note that EFsod is must always be included if we want to include other data groups, since it contains the data that is required to verify the authenticity of the other data groups.
+
+\section{Privacy considerations}\label{sec:privacy-considerations}
+It is important to note that if we choose for document holder authentication, the enrollment data contains a lot of information about the document holder.
+
+\paragraph{Basic RDE}
+The enrollment data contains the contents of the data group that is going to be used for RDE.
+In most cases, this is DG14, which is also the most privacy-friendly data group to use.
+This data group contains the public key of the document holder.
+This is not necessarily sensitive information in itself, but the choice of the public key domain parameters could potentially still reveal the nation that issued the document and the age and type of document (e-passport, eID, etc.).
+
+\paragraph{EFsod}
+The enrollment data, additionally, contains the certificate chain and signatures.
+This will always disclose the nation that issued (signed) the document, and will disclose the issuing and expiry date of the document (as these will be included in the certificate chain).
+
+\paragraph{MRZ data}
+If the MRZ data is included, the enrollment data will also contain the full names of the document holder, their date of birth, sex, nationality, the document number document type and date of expiry.
+Also, some countries include the document holder's personal number in the MRZ data.
+In certain countries, this latter fact is a problem, as the personal number is considered sensitive information that may not be disclosed.
+This problem will be discussed later.
+
+\paragraph{Facial image}
+If the facial image is included, the enrollment data will also contain the facial image of the document holder.
+This will also include some metadata that might indirectly reveal information about the document holder (e.g.\ the nation that issued the document, the date of issuance).
+
+\subsection{Privacy considerations for the MRZ data}\label{subsec:privacy-considerations-for-the-mrz-data}
+We have already mentioned that the MRZ data can sometimes contain the document holder's personal number (social security number / BSN).
+For Dutch citizens, this is a problem, as the personal number is considered sensitive information that, by law, may not be processed by many parties.
+This fact makes it impossible to use this data for RDE.
+
+Since 2021, however, the Dutch government has released a new model identity card and passport that no longer contains the personal number (social security number / BSN) in the MRZ data.
+However, the old passports and identity cards are still in circulation and will be until 2031 (when the old passports expire).
+This means that we cannot use the MRZ data for document holder authentication for Dutch citizens with an old passport or identity card.
+As a key server, we should even reject enrollment data that contains the MRZ data for Dutch citizens with an old passport or identity card and make sure the reader application will not send this data to the key server in the first place.
+
+We did not investigate if this is also a problem for other countries.
+
+\section{Trust}\label{sec:trust}
+Verheul has presented an alternative infrastructure for document holder authentication for RDE in~\cite{verheul2020secure}.
+In his paper, he also mentions the problem with the MRZ data for Dutch citizens, and he proposes a solution for this problem that also generally gives users more control over their privacy.
+
+In his solution, the MRZ data is only disclosed to the key server upon registration.
+After that, the key server will create its own certificate claiming that they verified the full enrollment data.
+The key server will then only disclose the parts of the enrollment data that the user has allowed, together with this own certificate.
+
+Though this approach seems to solve the problem, it does not work for our use case.
+
+For one, Verheul's proposal still requires the key server to have access to the full MRZ data.
+In case of SURF, SURF is never allowed to receive the MRZ data at all if it contains the personal number (social security number / BSN) of a Dutch citizen.
+Receiving it and deleting it later is not an option.
+
+This problem could be resolved by creating a certified reader app for enrollment that does the passive authentication on-device, and only send parts (so not the personal number) of the MRZ data to SURF, accompanied by a certificate from the app.
+In theory, this is possible, but it introduces a lot of complexity.
+
+Moreover, this approach would place extra trust in SURF running the required PKI for the certified apps.
+As sender, we do not have the benefit of relying on the government PKI, which we consider to be one of the main benefits of using RDE.
+We therefore choose not to implement this approach.
+
+\section{Key expiration and rollover}\label{sec:key-expiration-and-rollover}
+In the basic RDE scheme, the e-passport essentially behaves as a simple HSM that `contains' secret keys.
+Decryption simply consists of extracting the secret key from the e-passport.
+E-passports, however, have a limited lifetime.
+
+The CA certificate has a validity of 10 years and the document itself also has a certain expiration date (usually 10 years as well, but this can be shorter\footnote{
+An interesting remark is that the validity of the signature on the passport does not necessarily match the issuance and expiry dates from the MRZ data.
+Sometimes, the signature is valid for a (slightly) longer period than the validity of the passport itself.
+Most notably, this holds for Dutch passports for minors.
+For them, the passport is only valid for 5 years, but the signature is valid for 10 years (like for adults).
+We suspect that this is done for the convenience of the manufacturer of the passports.
+}).
+The basic RDE scheme does not take this into account: after expiration, the e-passport will still be able to retrieve a secret key based on decryption parameters and nothing withholds a user from generating a key for an expired e-passport.
+
+Yet, this is something we should take into account as application using RDE.
+Not only should we not trust document holder authentication for expired e-passports, it might also be the case that the document holder does not have access to their e-passport anymore.
+In The Netherlands, for example, upon requesting a new passport, the municipality will destroy the old passport (by cutting holes through the document).
+It could thus be the case that as sender, you encrypt for a passport that no longer `exists', or expires between the time of encryption and decryption.
+These considerations might have consequences for the application implementing RDE.
