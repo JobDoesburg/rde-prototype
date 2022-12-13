@@ -7,7 +7,6 @@ These are more fundamental research questions, in contrast to the more implement
 \label{sec:split-key-architecture}
 Currently, the decryption (key retrieval) step in RDE is based fully on the e-passport.
 The secret key is retrieved fully from the e-passport.
-
 This has some consequences.
 In case a user loses his e-passport, however, there is no way for them to revoke their passport.
 They surely could indicate at a key server that their passport is lost (after authenticating with their email, for example), hopefully preventing others from still using the passport's enrollment parameters to encrypt for.
@@ -16,12 +15,10 @@ Already encrypted documents that are already out there, however, cannot be revok
 A possible solution to this problem is to use a split-key architecture.
 In such an architecture, the secret key would not only be based on the response of the e-passport, but also on a secret key that is stored on a key server.
 For decryption, the key server would thus also need to be involved.
-
 To revoke a document, the user would simply need to revoke the key on the key server, making any future decryption attempts fail.
 
 With such an infrastructure, also a PIN could be introduced that needs to be provided in order to unlock the key server's secret key part.
 Introduction of a PIN would give us even more security, as it prevents stolen or lost passports from being used to retrieve the secret message key.
-
 Note that this still does not bind the e-passport to a specific reader app.
 The reader app itself still does not need to store any secret data itself.
 

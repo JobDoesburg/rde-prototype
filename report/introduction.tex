@@ -1,5 +1,5 @@
 \chapter{Introduction}\label{ch:introduction}
-Filesender applications, such as the popular WeTransfer\footnote{\url{https://wetransfer.com}} or its self-hosted open source alternative FileSender project\footnote{\url{https://filesender.org}}, are a popular way to transfer large amounts of data, removing the file size restrictions of regular email.
+Filesender applications, such as the popular WeTransfer\footnote{\url{https://wetransfer.com}} or its self-hosted open source alternative FileSender project,\footnote{\url{https://filesender.org}} are a popular way to transfer large amounts of data, removing the file size restrictions of regular email.
 Due to their popularity, filesender services are a privacy hotspot, too.
 That is, large amounts of possibly privacy-sensitive data are uploaded to these services and a possible security breach at such a service could give adversaries access to the data of numerous users.
 To improve privacy, end-to-end encryption is required for services like these.
@@ -12,7 +12,7 @@ Asymmetric encryption could solve this problem, but the practicalities of proper
 
 \section{About SURF}\label{sec:about-surf}
 SURF is the Dutch organisation of collaborative educational institutions.
-SURF offers ICT services to their members, among which some cloud services such as SURFfilesender, that is based on the open source FileSender project.
+SURF offers ICT services to their members, among which some cloud services such as SURFfilesender, based on the open source FileSender project.
 Via SURFfilesender, students and staff from these institutions can share large files (up to 1TB) with each other.
 SURF has a high focus on security and privacy and thus does not want to process large amounts of unencrypted data with their service.
 
@@ -21,11 +21,11 @@ Currently, the FileSender project does implement end-to-end encryption with symm
 When users choose to use this option, they are asked to choose or generate a password.
 This password is then used to encrypt the files in browser, before they are uploaded to the server.
 When the file upload is complete, the server returns a link that can be shared with the recipient in order to download the files.
-The password is not sent to the server, but is expected to be shared out-of-bands with the recipient.
+The password is not sent to the server, but is expected to be shared out-of-band with the recipient.
 When downloading the files, the recipient is required to enter the password, which is then used to decrypt the files in browser again.
 
 This way, though SURF does facilitate the transfer of data for their users, they do not have access to the data itself.
-Also, in a way, this could be considered as a form of two-factor authentication, as the files can only be retrieved with access to the download link (send via email to the user's email box) and with knowledge of the password.
+Also, in a way, this could be considered as a form of two-factor authentication, as the files can only be retrieved with access to the download link (sent via email to the user's email box) and with knowledge of the password.
 This, in principle, makes the service suitable for transferring privacy-sensitive data.
 
 \subsection{Problems with the current end-to-end encryption}\label{subsec:problems-with-the-current-end-to-end-encryption}
@@ -46,7 +46,7 @@ Given this situation, SURF is looking for a solution that allows them to provide
 \section{Remote Document Encryption}\label{sec:remote-document-encryption}
 In 2017, Verheul proposed Remote Document Encryption (RDE) as a scheme for `encrypting data for e-passport holders'~\cite{verheul2017remote}.
 E-passports are passports that contain a chip implementing the ICAO 9303 standard~\cite{icao9303securitymechanisms}.
-We immediately note that although only passports implement this standard, also other documents like national ID cards and drivers licenses, implement significant parts of this standard and can thus be used as well.
+We immediately note that although only passports implement this standard, also other documents, like national ID cards and drivers licenses, implement significant parts of this standard and can thus be used as well.
 In the rest of this report, we will use the term e-passport, passport, or document interchangeably to refer to these documents, unless otherwise specified.
 The RDE scheme is based on the idea that the e-passport can be used as a wireless HSM (Hardware Security Module), generating symmetric keys (shared secrets with some other party) that can be used for encryption.
 In this terminology, we consider \textit{recipients} as the document holders, and \textit{senders} as the parties that want to send data to the recipients in an encrypted way.
@@ -55,7 +55,7 @@ In this terminology, we consider \textit{recipients} as the document holders, an
 Recipients in this scheme first need to register their e-passport for usage with RDE at some database.
 During enrollment, some data from the e-passport is extracted.
 These are called enrollment parameters and one could consider them as the RDE public key of the e-passport (though we will not use the word `public key' as to avoid confusion later on).
-Senders can then, based on this public key, generate a secret key that is shard between them and the e-passport, together with so-called decryption parameters.
+Senders can then, based on this public key, generate a secret key that is shared between them and the e-passport, together with so-called decryption parameters.
 The passport holder can use these decryption parameters, together with their e-passport to retrieve the secret key.
 The decryption parameters here do not need to stay secret, as they are only used to retrieve the shared secret from the e-passport.
 A very simplified version of the RDE scheme is shown in Figure~\ref{fig:rde-scheme-very-simple}.
@@ -87,7 +87,7 @@ Especially the latter ones are not meant to be used in a production environment,
 Most notably, our prototype does not implement protection against, for example, phishing attacks, denial of service attacks, or active MITM attacks on parts of the protocol that do not involve RDE itself.
 We consider the challenge to implement such protections to be very much feasible, but out of scope for this report.
 
-A proof-of-concept implementation is available at \url{TODO} and the source code is available at \url{TODO}.
+A proof-of-concept walk-through of in-browser RDE is available at \url{https://demo.rde.filesenderbeta.surf.nl} and the source code is available at \url{TODO}.
 
 \subsection{Alterations to the original secure filesender proposal}\label{subsec:alterations-to-the-rde-scheme}
 Verheul already described a secure filesender service based on RDE, where the e-passport holder is authenticated using the existing PKI for e-passports~\cite{verheul2020secure}.
@@ -109,7 +109,7 @@ The proposed solution has a number of benefits over the current (password-based)
 \subsubsection{True end-to-end encryption}\label{subsubsec:true-end-to-end-encryption}
 First of all, the proposed solution does not require the users to share a password out-of-band.
 Instead, the encryption key is retrieved from the e-passport and never sent over a network (in unencrypted form).
-Consequently, the proposed solution provides 2FA-like functionality for the download of the file: the recipient of a file transfer needs to both know the download link (that is unique and should only be sent to the recipient obviously) and be in possession of and the e-passport in order to retrieve the files.
+Consequently, the proposed solution provides 2FA-like functionality for the download of the file: the recipient of a file transfer needs to both know the download link (that is unique and should only be sent to the recipient obviously) and be in possession of the e-passport in order to retrieve the files.
 
 \subsubsection{'People already have an e-passport'}\label{subsubsec:people-already-have-an-e-passport}
 The aforementioned benefits, however, are not specific to the usage of RDE with e-passports.
@@ -125,7 +125,7 @@ For organisations like SURF and its members, this means that there are no additi
 Another advantage is that, in contrast to using commercial HSM devices, users have an intrinsic interest in keeping their passport secure.
 People are unlikely to share their passport with others or leave it somewhere unattended, as this could lead to the passport being stolen or lost and possible identity theft.
 We expect people to handle their passport more securely than any commercial HSM device.
-And generally, at least in the Netherlands, people are more likely to always have their identity documents with them, while commercial HSM devices or even phones might not be available at all times.
+Generally, at least in the Netherlands, people are more likely to always have their identity documents with them, while commercial HSM devices or even phones might not be available at all times.
 
 \subsubsection{Use existing governmental PKI}\label{subsubsec:use-existing-governmental-pki}
 Moreover, using e-passports comes with the additional benefit that the e-passport holder can be authenticated using the existing PKI for e-passports run by governments.

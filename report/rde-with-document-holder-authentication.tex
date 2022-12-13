@@ -30,7 +30,7 @@ The enrollment data should then be extended to also contain the contents of thes
 Most importantly, we should include the contents of EFsod.
 With this information, anyone can perform passive authentication, as mentioned in section~\ref{sec:passive-authentication} (checking hashes, signature, and certificate chain).
 This means that any party, including the key server itself, can verify that the enrollment data belongs to the actual document holder at any time.
-And because in RDE, Chip Authentication is performed, we also know that on decryption, the document actively authenticates itself too.
+Because in RDE, Chip Authentication is performed, we also know that on decryption, the document actively authenticates itself too.
 
 This way, we do not only have the ability to generate a shared secret key between the sender and the receiver, but we immediately verify the document holder's identity via the governmental PKI.
 Because the RDE data group is bound to this information, this essentially guarantees that only the document holder (of anyone in possession of their document) can retrieve the secret key.
@@ -58,7 +58,7 @@ Following this approach leads basically to 4 levels of overall RDE security:
 There is also a fifth option available, which is to only use the facial image from DG2 for authentication and not include the MRZ data.
 This can be an interesting option for when we do not want to disclose the identity information of the document holder, but do not care about disclosing the document holder's face.
 
-Note that EFsod is must always be included if we want to include other data groups, since it contains the data that is required to verify the authenticity of the other data groups.
+Note that EFsod must always be included if we want to include other data groups, since it contains the data that is required to verify the authenticity of the other data groups.
 
 \section{Privacy considerations}\label{sec:privacy-considerations}
 It is important to note that if we choose for document holder authentication, the enrollment data contains a lot of information about the document holder.

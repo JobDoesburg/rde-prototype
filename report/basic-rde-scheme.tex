@@ -72,7 +72,7 @@ After the first level of security has been established, the reader can read data
 To authenticate whether this data actually belongs to a valid passport, the reader can perform passive authentication.
 This requires the contents of the EFsod file to be read from the passport.
 The reader can calculate the hashes of the data groups on the passport and compare them to the hashes in the EFsod file.
-Additionally, it should verify the authenticity of the read EFsod file by checking a hash on those contents, and verifying the signature on the file.
+Additionally, it should verify the authenticity of the EFsod file by checking a hash on those contents, and verifying the signature on the file.
 This signature is created using the public key of the country that issued the passport, the so-called \textit{document signing key}.
 Finally, the certificate chain should be verified.
 This ultimately requires the reader to have a trusted list of document signing keys.
@@ -129,10 +129,10 @@ RDE is based on this idea.
     This emulated ciphertext response will be used to construct the secret key.
     Furthermore, we also need to emulate, using the shared secret and the derived keys, what our encrypted read command should look like if we were to actually communicate with the passport.
     The emulated encrypted read command (also referred to as protected command), together with the public key we chose ourselves, together form the RDE decryption parameters.
-    \item When as recipient, we want to retrieve the secret message key, we use the provided RDE decryption parameters.
+    \item When, as recipient, we want to retrieve the secret message key, we use the provided RDE decryption parameters.
     First we perform BAC or PACE to set up the first level of security.
     Then we perform the ECDH with the provided public key from decryption parameters (that was chosen by the sender).
-    Even though we as recipient do not know the shared secret our passport is using (as we do not have the private key the sender generated), the passport will know this shared secret (as it is based on the private key that is securely stored on the passport).
+    Even though we, as recipient, do not know the shared secret our passport is using (as we do not have the private key the sender generated), the passport will know this shared secret (as it is based on the private key that is securely stored on the passport).
     We then send the protected command to the passport.
     The passport will be able to decrypt this command, and then reply with the encrypted contents of the chosen data group.
     This will match the ciphertext response that was emulated by the sender.
@@ -183,7 +183,7 @@ However, it does specify a number of standard curves that can be used:
 \end{itemize}
 Any e-passport that is compliant with the ICAO standard on this level should be able to perform RDE.
 
-As noted by Verheul in~\cite{verheul2017remote}, also other national ID cards and electronic drivers licenses that implement the ICAO CA(v1) standard should be able to perform RDE.
+As noted by Verheul in~\cite{verheul2017remote}, also other national ID cards and electronic drivers licenses that implement the ICAO CA v1 standard should be able to perform RDE.
 German identity cards, however, do not implement the ICAO CA v1 standard, but rather uses CA v2 that is not compatible with RDE because no static key from the passport is used in the key exchange.
 Moreover, the German identity card requires the use of TA before reading any data group.
 

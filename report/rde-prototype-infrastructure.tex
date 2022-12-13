@@ -122,12 +122,12 @@ Then, we perform passive authentication with the information from the EFsod.
 Note that in the current implementation, we do not check the certificate chain of the EFsod, as this is not necessary for the prototype and would require us to include a certificate store with trusted certificates.
 In the future, this should be added to the implementation.
 
-For enrollment, apart from the data group to use for RDE, users can also choose the number of bytes to read from that data group, $n$ or \textsc{rdeDGLength}.
+For enrollment, apart from the data group to use for RDE, users can also choose the number of bytes to read from that data group, $n$ or \textsf{rdeDGLength}.
 This usually is 223, as this is the maximum plaintext size for which the ciphertext fits in a single APDU, but can also be less if the user agrees with weaker security.
 Note that the data group must be large enough to actually read the number of bytes chosen by the user.
 Especially data group 1 is too small to read 223 bytes, so we recommend using data group 14 for enrollment.
 
-If enrollment with security data is chose, we include the EFsod in the enrollment parameters, together with the full contents of the RDE data group.
+If enrollment with security data is chosen, we include the EFsod in the enrollment parameters, together with the full contents of the RDE data group.
 If enrollment with MRZ data is chosen, we also include the MRZ data in the enrollment parameters, and similarly for facial image data.
 If no security data is included, we only include the first $n$ bytes of the RDE data group, as this is the maximum plaintext size for which the ciphertext fits in a single APDU and we thus do not need more data.
 If we do include security data, we must include the full RDE data group, as the hash of the RDE data group otherwise will not verify with the EFsod.
@@ -151,7 +151,7 @@ The most significant step is then to emulate the e-passport response to a READ B
 This results in the emulated ciphertext, which is then used to generate the secret message key by simply taking the SHA-256 hash of the ciphertext.
 We also generate the encrypted READ BINARY command with KENC and KMAC and store this, together with the ephemeral public key, in the decryption parameters.
 
-The main difference between the key generation in the TypeScript and Java (Kotlin) library is that the Java (Kotlin) library uses the Bouncy Castle library for all cryptographic operations and implementations from JMRTD, while for the TypeScript library these are not available.
+The main difference between the key generation in the TypeScript and Java (Kotlin) library is that the Java (Kotlin) library uses the BouncyCastle library for all cryptographic operations and implementations from JMRTD, while for the TypeScript library these are not available.
 The TypeScript library also cannot use the WebCrypto API for these steeps, as it does not support all algorithms and curves that are used in the ICAO specifications.
 We therefore use custom crypto libraries for emulating the passport response and generating the protected command.
 For more details, we refer to our source code.
@@ -190,7 +190,13 @@ For the TypeScript libraries, the preferred solution would be to use the WebCryp
 The WebCrypto API, however, does not support all cryptographic operations that are required for emulating a passport, such as AES-CMAC or elliptic curve cryptography with brainpool curves.
 That is why we have chose to use the following cryptographic libraries for emulating e-passport commands and responses:
 
-TODO
+\begin{itemize}
+    \item \textsf{@peculiar/x509}
+    \item \textsf{indutny/elliptic} (for ECC on arbitrary curves)
+    \item \textsf{indutny/hash.js}
+    \item \textsf{rosek86/aes-cmac} (for AES-CMAC)
+    \item \textsf{leonardodino/aes-ts} (for AES-CBC and AES-ECB with no padding)
+\end{itemize}
 
 \section{Infrastructure components}\label{sec:infrastructure-components}
 The infrastructure components of the RDE prototype are the key server, the proxy server and the reader app.
@@ -371,7 +377,7 @@ In fact, there is no reason to use PBKDF2 here, as the RDE secret key is already
 
 \subsection{File download}\label{subsec:file-download}
 When the recipient tries to download a file that is encrypted with RDE, they are presented with a popup that asks them to scan a QR code with their reader app.
-This triggers the RDE decryption handshake protocol as described in section~\ref{subsubsec:decryption-handshake-protocol}.
+This triggers the RDE decryption handshake protocol as described in Section~\ref{subsubsec:decryption-handshake-protocol}.
 This results in the retrieval of the secret key, which was used to encrypt the files.
 This key is then again used in the PBKDF2 key derivation function to finally decrypt the files.
 
