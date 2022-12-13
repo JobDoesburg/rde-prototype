@@ -122,11 +122,11 @@ Decryption simply consists of extracting the secret key from the e-passport.
 E-passports, however, have a limited lifetime.
 
 The CA certificate has a validity of 10 years and the document itself also has a certain expiration date (usually 10 years as well, but this can be shorter\footnote{
-An interesting remark is that the validity of the signature on the passport does not necessarily match the issuance and expiry dates from the MRZ data.
-Sometimes, the signature is valid for a (slightly) longer period than the validity of the passport itself.
-Most notably, this holds for Dutch passports for minors.
-For them, the passport is only valid for 5 years, but the signature is valid for 10 years (like for adults).
-We suspect that this is done for the convenience of the manufacturer of the passports.
+    An interesting remark is that the validity of the signature on the passport does not necessarily match the issuance and expiry dates from the MRZ data.
+    Sometimes, the signature is valid for a (slightly) longer period than the validity of the passport itself.
+    Most notably, this holds for Dutch passports for minors.
+    For them, the passport is only valid for 5 years, but the signature is valid for 10 years (like for adults).
+    We suspect that this is done for the convenience of the manufacturer of the passports.
 }).
 The basic RDE scheme does not take this into account: after expiration, the e-passport will still be able to retrieve a secret key based on decryption parameters and nothing withholds a user from generating a key for an expired e-passport.
 
