@@ -23,8 +23,35 @@ The general infrastructure is presented in Figure~\ref{fig:rde-prototype-infrast
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{imgs/RDE infra overview}
-    \caption{Overview of the RDE prototype infrastructure.}
+    \caption{Overview of the RDE prototype infrastructure.
+    A more detailed figure for each phase of RDE is included in Figure~\ref{fig:rde-detail}.}
     \label{fig:rde-prototype-infrastructure-overview}
+\end{figure}
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.5\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{imgs/RDE enrollment detail}
+        \caption{Enrollment}
+        \label{fig:rde-enrollment-detail}
+    \end{subfigure}\\
+    \vspace{1cm}
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{imgs/RDE keygen detail}
+        \caption{Key generation}
+        \label{fig:rde-keygen-detail}
+    \end{subfigure}\\
+    \vspace{1cm}
+    \begin{subfigure}[b]{0.8\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{imgs/RDE decryption detail}
+        \caption{Decryption}
+        \label{fig:rde-decryption-detail}
+    \end{subfigure}
+    \caption{Interaction in the RDE prototype infrastructure in different phases.}
+    \label{fig:rde-detail}
 \end{figure}
 
 \subsection{Notes on our implementation}\label{subsec:infrastructure-overview-notes-on-our-implementation}
@@ -49,7 +76,7 @@ This includes the interaction with the e-passport for enrollment, the key genera
 The Java library basically forms a wrapper around the JMRTD library\footnote{\url{https://jmrtd.org}} for interaction with an e-passport and uses the BouncyCastle library\footnote{\url{https://www.bouncycastle.org}} for the cryptographic operations.
 The TypeScript library is intended to be used in a browser environment by the end user and does not implement any steps that require interaction with the passport.
 In the future, however, it could be interesting to implement this in the browser as well, as this would allow for a more seamless user experience.
-This would require hardware support for NFC in the browser, which to our knowledge is not yet available.
+This would require hardware support for NFC in the browser.
 
 \subsection{Data classes}\label{subsec:data-classes}
 There are several data classes that are used to store data / messages within the RDE protocol.
@@ -156,12 +183,12 @@ We derive the secret message key from the ciphertext by simply taking the SHA-25
 We reiterate that the ciphertext that forms the basis for the secret key, is sent in the clear from the e-passport to the reader (that computes the SHA-256 hash).
 
 \subsection{Cryptography implementations}\label{subsec:cryptography-implementations}
-As mentioned earlier, cryptographic operations in the Kotlin library use JMRTD and BouncyCastle. 
+As mentioned earlier, cryptographic operations in the Kotlin library use JMRTD and BouncyCastle.
 This is the obvious choice, as JMRTD is a solid library that implements communication with e-passports, and already uses BouncyCastle.
 
-For the TypeScript libraries, the preferred solution would be to use the WebCrypto API, as it is the most secure and most efficient implementation. 
-The WebCrypto API, however, does not support all cryptographic operations that are required for emulating a passport, such as AES-CMAC or elliptic curve cryptography with brainpool curves. 
-That is why we have chose to use the following cryptographic libraries for emulating e-passport commands and responses: 
+For the TypeScript libraries, the preferred solution would be to use the WebCrypto API, as it is the most secure and most efficient implementation.
+The WebCrypto API, however, does not support all cryptographic operations that are required for emulating a passport, such as AES-CMAC or elliptic curve cryptography with brainpool curves.
+That is why we have chose to use the following cryptographic libraries for emulating e-passport commands and responses:
 
 TODO
 
@@ -335,7 +362,7 @@ For example, it might be desirable to disallow senders to select enrollment para
 These are all topics for further consideration.
 
 \subsubsection{File encryption}
-After the user has chosen an RDE document to encrypt for and verified the enrollment parameters, the browser generates an RDE key.
+After the user has chosen the RDE document to encrypt for and verified the enrollment parameters, the browser generates an RDE key.
 The decryption parameters are send to the FileSender server and stored in its database.
 The secret key is used as the password for the PBKDF2 key derivation function that is already implemented in the FileSender application (for password-based encryption).
 

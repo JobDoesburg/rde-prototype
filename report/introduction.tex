@@ -31,11 +31,11 @@ This, in principle, makes the service suitable for transferring privacy-sensitiv
 \subsection{Problems with the current end-to-end encryption}\label{subsec:problems-with-the-current-end-to-end-encryption}
 The current end-to-end encryption scheme works well, as long as the password has sufficient entropy and is shared securely with the recipient via a different secure channel.
 However, in practice, SURF experiences this is often not the case.
-Users often share the password via the same email that contains the download link.
+Users often share the password via the same email that contains the download link, or they share it via a second email but to the same email inbox.
 This is problematic for multiple reasons.
 
 \begin{enumerate}
-    \item The password is sent in the same email as the download link, which means that we do not really have two-factor authentication for the download.
+    \item The password is sent to the same email inbox as the download link, which means that we do not really have two-factor authentication for the download.
     \item The password is sent in plain text, which means that the password is not protected against eavesdropping.
     \item The recipient is made responsible for the secure handling of the password.
 \end{enumerate}
@@ -52,8 +52,9 @@ The RDE scheme is based on the idea that the e-passport can be used as a wireles
 In this terminology, we consider \textit{recipients} as the document holders, and \textit{senders} as the parties that want to send data to the recipients in an encrypted way.
 
 \subsection{RDE scheme in short}\label{subsec:rde-scheme-in-short}
-Recipients in this scheme first need to register their e-passport for usage with RDE, for which some data from the e-passport is extracted.
-These are called enrollment parameters and one could consider them as the RDE public key of the e-passport.
+Recipients in this scheme first need to register their e-passport for usage with RDE at some database.
+During enrollment, some data from the e-passport is extracted.
+These are called enrollment parameters and one could consider them as the RDE public key of the e-passport (though we will not use the word `public key' as to avoid confusion later on).
 Senders can then, based on this public key, generate a secret key that is shard between them and the e-passport, together with so-called decryption parameters.
 The passport holder can use these decryption parameters, together with their e-passport to retrieve the secret key.
 The decryption parameters here do not need to stay secret, as they are only used to retrieve the shared secret from the e-passport.
