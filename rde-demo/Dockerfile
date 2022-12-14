@@ -17,5 +17,5 @@ COPY CSCA-NL-2022.json /usr/share/nginx/html/certificates.json
 COPY index.html /usr/share/nginx/html/index.html
 COPY demo.js /usr/share/nginx/html/demo.js.tmpl
 
-CMD envsubst < /usr/share/nginx/html/demo.js.tmpl > /usr/share/nginx/html/demo.js && nginx -g 'daemon off;'
+CMD envsubst '${KEYSERVER_URL} ${PROXYSERVER_URL} ${PROXYSERVER_WS_URL} ${CERTIFICATE_JSON_URL}' < /usr/share/nginx/html/demo.js.tmpl > /usr/share/nginx/html/demo.js && nginx -g 'daemon off;'
 EXPOSE 80
