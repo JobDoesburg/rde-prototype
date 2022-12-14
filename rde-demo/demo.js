@@ -1,3 +1,11 @@
+const KEYSERVER_URL = "${KEYSERVER_URL}";
+const PROXYSERVER_URL = "${PROXYSERVER_URL}";
+const PROXYSERVER_WS_URL = "${PROXYSERVER_WS_URL}";
+let CERTIFICATE_JSON_URL = "${CERTIFICATE_JSON_URL}"
+if (CERTIFICATE_JSON_URL === "") {
+    CERTIFICATE_JSON_URL = "/certificates.json"
+}
+
 const emailField = document.getElementById('email');
 const searchButton = document.getElementById('search');
 const documentSelectField = document.getElementById('documentSelect');
@@ -12,17 +20,17 @@ const decryptHandshakeButton = document.getElementById('decryptHandshake');
 const faceImageCanvas = document.getElementById('faceImageCanvas');
 
 const keyserverUsingURL = document.getElementById('keyserverUsingURL');
-keyserverUsingURL.innerText = KEYSERVER;
+keyserverUsingURL.innerText = KEYSERVER_URL;
 const proxyserverUsingURL = document.getElementById('proxyserverUsingURL');
-proxyserverUsingURL.innerText = PROXYSERVER;
+proxyserverUsingURL.innerText = PROXYSERVER_URL;
 const keyserverEnrollButton = document.getElementById('keyserverEnrollButton');
-keyserverEnrollButton.href = KEYSERVER;
+keyserverEnrollButton.href = KEYSERVER_URL;
 
 let searchResults = [];
 let handshake;
 let rdeKey;
 
-async function parseCertificateMasterList(url) {
+async function parseCertificates(url) {
     const certData = await fetch(url).then(response => response.json());
     return certData.map(cert => {
         return new RDEKeyGen.X509Certificate(cert)
@@ -31,7 +39,7 @@ async function parseCertificateMasterList(url) {
 
 async function search() {
     const email = emailField.value
-    const response = await fetch(KEYSERVER + "/api/search/?email=" + email);
+    const response = await fetch(KEYSERVER_URL + "/api/search/?email=" + email);
     const data = await response.json();
     searchResults = data;
     documentSelectField.innerHTML = ""
@@ -92,9 +100,9 @@ async function verify() {
         return
     }
 
-    const certificateMasterList = await parseCertificateMasterList(CERTIFICATE_MASTER_LIST_URL) // TODO also check CRL's
+    const trustedCertificates = await parseCertificates(CERTIFICATE_JSON_URL) // TODO also check CRL's
 
-    const verifyResult = await enrollmentData.verify(certificateMasterList)
+    const verifyResult = await enrollmentData.verify(trustedCertificates)
 
     if (verifyResult) {
         const certificate = enrollmentData.docSigningCertificate
@@ -177,9 +185,9 @@ async function startHandshake(socket, url) {
 }
 
 async function decryptHandshake() {
-    const socketResponse = await fetch(PROXYSERVER + "/open");
+    const socketResponse = await fetch(PROXYSERVER_URL + "/open");
     const token = await socketResponse.text();
-    const socketUrl = PROXYSERVERWS + "/socket/" + token;
+    const socketUrl = PROXYSERVER_WS_URL + "/socket/" + token;
     console.log("Using socket on", socketUrl)
     const socket = await new WebSocket(socketUrl);
     socket.onopen = function (event) {

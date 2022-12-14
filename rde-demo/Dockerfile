@@ -13,8 +13,9 @@ RUN npm run build
 FROM nginx:alpine
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html/rde-js-client/dist
 COPY openjpeg.js /usr/share/nginx/html/openjpeg.js
-COPY dutchCSCACertificates.json /usr/share/nginx/html/dutchCSCACertificates.json
+COPY CSCA-NL-2022.json /usr/share/nginx/html/certificates.json
 COPY index.html /usr/share/nginx/html/index.html
-COPY demo.js /usr/share/nginx/html/demo.js
-COPY demo.config.js /usr/share/nginx/html/demo.config.js
+COPY demo.js /usr/share/nginx/html/demo.js.tmpl
+
+CMD envsubst < /usr/share/nginx/html/demo.js.tmpl > /usr/share/nginx/html/demo.js && nginx -g 'daemon off;'
 EXPOSE 80
