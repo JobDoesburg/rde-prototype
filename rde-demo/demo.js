@@ -171,7 +171,7 @@ async function generateKey() {
     const enrollmentData = RDEKeyGen.RDEEnrollmentParameters.fromJson(enrollmentParamsField.value)
     const keyGenerator = new RDEKeyGen.RDEKeyGenerator(enrollmentData)
     rdeKey = await keyGenerator.generateKey()
-    keyField.innerText = RDEKeyGen.utils.toHexString(rdeKey.encryptionKey)
+    keyField.innerText = RDEKeyGen.utils.toHexString(rdeKey.secretKey)
     decryptionParamsField.innerText = JSON.stringify(rdeKey.decryptionParameters)
 }
 
