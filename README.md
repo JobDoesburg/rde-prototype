@@ -37,24 +37,24 @@ To use a different set of CSCA certificates, a JSON file can be mounted at `/usr
 Alternatively, the `CERTIFICATES_JSON_URL` environment variable can be set to the url of a JSON file containing the trusted CSCA certificates.
 
 ### Keyserver
-The RDE KeyServer is configured in the `keyserver` section of the `docker-compose.yml` file.
+The RDE keyserver is configured in the `keyserver` section of the `docker-compose.yml` file.
 The following environment variables should be set:
 
 - `DJANGO_SECRET_KEY`: The secret key used by Django.
 - `DJANGO_ALLOWED_HOSTS`: The allowed hosts for Django, comma separated, e.g. `keyserver.example.com` or `keyserver.example.com,keyserver2.example.com`.
 - `DJANGO_DEBUG`: Whether to enable debug mode for Django, e.g. `True` or `False`.
-- `DJANGO_BASE_URL`: The base url of the RDE KeyServer, e.g. `https://keyserver.example.com`. This is also used as entity id for SAML.
+- `DJANGO_BASE_URL`: The base url of the RDE keyserver, e.g. `https://keyserver.example.com`. This is also used as entity id for SAML.
 - `DJANGO_SAML_IDP_METADATA_URL`: The url of the SAML IdP metadata, e.g. `https://metadata.test.surfconext.nl/idp-metadata.xml`.
 
 #### SAML certificate
 For SAML, a `private.key` and `public.cert` should be mounted at `/code/keyserver/config/saml/` in the container.
-The `private.key` should be the private key of the RDE KeyServer, and the `public.cert` should be the public certificate of the RDE KeyServer.
+The `private.key` should be the private key of the RDE keyserver, and the `public.cert` should be the public certificate of the RDE keyserver.
 The configuration in this repository mounts the `/code/keyserver/config/saml/` directory, so the files can be placed at `./certs/saml/` on the host.
 
 A sample command to generate these files is `openssl req -x509 -newkey rsa:4096 -keyout private.key -out public.cert -days 365`.
 
 #### Database
-The KeyServer uses an SQLite database. This can be mounted at `/code/keyserver/db.sqlite3` in the container for persistent storage. 
+The keyserver uses an SQLite database. This can be mounted at `/code/keyserver/db.sqlite3` in the container for persistent storage. 
 The configuration in this repository mounts a file for this purpose, but this can be changed to a volume (or with minimal changes to the keyserver, a separate database container).
 
 For more information, see the [RDE keyserver](https://gitlab.surf.nl/filesender/rde-keyserver) repository.
