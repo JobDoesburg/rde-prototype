@@ -10,8 +10,8 @@ The source code for the RDE Android app can be found at [https://gitlab.surf.nl/
 The RDE prototype consists of the following components:
 - [RDE keyserver](https://gitlab.surf.nl/filesender/rde-keyserver), which is used to store enrolled RDE keys for user identities, using email addresses via SAML, and make them available via a REST API.
 - [RDE client proxyserver](https://gitlab.surf.nl/filesender/rde-client-proxyserver), which is used to enable communication between a RDE browser client and the RDE Android client app.
-- [RDE Android client app](https://gitlab.surf.nl/filesender/rde-client-android), which is used to actually communicate with RDE documents: enroll them and use them to retrieve keys. As this is an Android app, it is not included as a submodule in this repository.
-- [RDE JS client library](https://gitlab.surf.nl/filesender/rde-js-client), which consists of two modules, one for generating RDE keys and one for interacting with the RDE Android client app.
+- [RDE Android client app](https://gitlab.surf.nl/filesender/rde-client-android), which is used to actually communicate with RDE documents: enroll them and use them to retrieve keys. This app, in its turn, uses the [RDE Java client library](https://gitlab.surf.nl/filesender/rde-java-client) (written in Kotlin). As this is an Android app, it is not included as a submodule in this repository.
+- [RDE JS client library](https://gitlab.surf.nl/filesender/rde-js-client) (written in TypeScript), which consists of two modules, one for generating RDE keys and one for interacting with the RDE Android client app.
 - [RDE demo](https://gitlab.surf.nl/filesender/rde-prototype/-/tree/main/rde-demo), a demo website that uses the RDE JS client library to generate RDE keys and interact with the RDE Android client app to retrieve them again.
 
 ## Installation
