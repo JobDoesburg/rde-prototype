@@ -71,10 +71,10 @@ Finally, there is the integration of RDE in the FileSender application itself.
 Here, minimal changes have been made to the FileSender application to enable the RDE functionality.
 
 \section{Core components}\label{sec:core-components}
-The core components of the RDE prototype are the Java (Kotlin) library and TypeScript library for key generation that provide the cryptographic functionality for the RDE scheme.
+The core components of the RDE prototype are the Java library (written in Kotlin) and JavaScript library (written in TypeScript) for key generation that provide the cryptographic functionality for the RDE scheme.
 This includes the interaction with the e-passport for enrollment, the key generation and the decryption (key retrieval) steps.
 The Java library basically forms a wrapper around the JMRTD library\footnote{\url{https://jmrtd.org}} for interaction with an e-passport and uses the BouncyCastle library\footnote{\url{https://www.bouncycastle.org}} for the cryptographic operations.
-The TypeScript library is intended to be used in a browser environment by the end user and does not implement any steps that require interaction with the passport.
+The JavaScript library is intended to be used in a browser environment by the end user and does not implement any steps that require interaction with the passport.
 In the future, however, it could be interesting to implement this in the browser as well, as this would allow for a more seamless user experience.
 This would require hardware support for NFC in the browser.
 
@@ -108,7 +108,7 @@ The public key is a X.509 hexadecimal encoded ASN.1 DER string according to ICAO
 Additionally, the OID\footnote{Object identifier, a globally standardized identifier for, among others, cipher suites.} of the CA algorithm is stored, as having this information saves us a step in the decryption process.
 
 \subsection{Enrollment}\label{subsec:enrollment}
-Enrollment is only included in the Java (Kotlin) library, as it requires interaction with the e-passport.
+Enrollment is only included in the Java library, as it requires interaction with the e-passport.
 During enrollment, first, the security info is read from the e-passport in order to determine if the e-passport supports PACE or if we should fallback to BAC for our first level of secure messaging.
 If PACE is supported, we use PACE to authenticate to the e-passport, otherwise we use BAC.
 
@@ -137,7 +137,7 @@ We also include the OID of the CA protocol supported by the document, as this is
 Finally, the enrollment parameters include a document name, which functions as a mnemonic name to identify the document towards the user (in case the user has multiple documents enrolled).
 
 \subsection{Key generation}\label{subsec:key-generation}
-Key generation is included in the TypeScript library, as it does not require interaction with the passport and is expected to run in the browser of a sender.
+Key generation is included in the JavaScript library, as it does not require interaction with the passport and is expected to run in the browser of a sender.
 For completeness, however, we also include key generation in the Java (Kotlin) library, as it is useful for testing purposes and could potentially be useful for other applications when a server wants to encrypt messages for a user.
 However, verification of the enrollment parameters is not yet implemented in the Java (Kotlin) library.
 Only the TypeScript library currently implements verification of the enrollment parameters.
@@ -151,8 +151,8 @@ The most significant step is then to emulate the e-passport response to a READ B
 This results in the emulated ciphertext, which is then used to generate the secret message key by simply taking the SHA-256 hash of the ciphertext.
 We also generate the encrypted READ BINARY command with KENC and KMAC and store this, together with the ephemeral public key, in the decryption parameters.
 
-The main difference between the key generation in the TypeScript and Java (Kotlin) library is that the Java (Kotlin) library uses the BouncyCastle library for all cryptographic operations and implementations from JMRTD, while for the TypeScript library these are not available.
-The TypeScript library also cannot use the WebCrypto API for these steeps, as it does not support all algorithms and curves that are used in the ICAO specifications.
+The main difference between the key generation in the JavaScript (TypeScript) and Java (Kotlin) library is that the Java library uses the BouncyCastle library for all cryptographic operations and implementations from JMRTD, while for the JavaScript library these are not available.
+The JavaScript library also cannot use the WebCrypto API for these steeps, as it does not support all algorithms and curves that are used in the ICAO specifications.
 We therefore use custom crypto libraries for emulating the passport response and generating the protected command.
 For more details, we refer to our source code.
 
@@ -172,7 +172,7 @@ Certificates need to be provided individually in PEM format.
 Also CRL's (Certificate Revocation Lists) are not yet implemented.
 
 \subsection{Decryption (key retrieval)}\label{subsec:decryption-key-retrieval}
-Decryption is only included in the Java (Kotlin) library, as it requires interaction with the e-passport.
+Decryption is only included in the Java library, as it requires interaction with the e-passport.
 During decryption, similar to enrollment, first, the security data of the e-passport is read from the e-passport and either PACE or BAC is used to authenticate to the e-passport.
 Then, we perform Chip Authentication with the ephemeral public key from the decryption parameters.
 The e-passport will now further communicate with the reader using the shared secret with the sender who created the decryption parameters.
@@ -186,7 +186,7 @@ We reiterate that the ciphertext that forms the basis for the secret key, is sen
 As mentioned earlier, cryptographic operations in the Kotlin library use JMRTD and BouncyCastle.
 This is the obvious choice, as JMRTD is a solid library that implements communication with e-passports, and already uses BouncyCastle.
 
-For the TypeScript libraries, the preferred solution would be to use the WebCrypto API, as it is the most secure and most efficient implementation.
+For the JavaScript libraries, the preferred solution would be to use the WebCrypto API, as it is the most secure and most efficient implementation.
 The WebCrypto API, however, does not support all cryptographic operations that are required for emulating a passport, such as AES-CMAC or elliptic curve cryptography with brainpool curves.
 That is why we have chose to use the following cryptographic libraries for emulating e-passport commands and responses:
 
