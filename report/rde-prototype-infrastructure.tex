@@ -109,6 +109,10 @@ Additionally, the OID\footnote{Object identifier, a globally standardized identi
 
 \subsection{Enrollment}\label{subsec:enrollment}
 Enrollment is only included in the Java library, as it requires interaction with the e-passport.
+Note that the library offers several parameters for enrollment, for example the \textsf{rdeDGId} and \textsf{rdeRBLength}.
+In practice, especially those parameters should be set by the party that makes RDE available for one of their services, as those parameters highly influence the privacy and cryptographic strength of the scheme.
+Other parameters, like \textsf{withMRZData} could also be set, but could also be defined by the end-user.
+
 During enrollment, first, the security info is read from the e-passport in order to determine if the e-passport supports PACE or if we should fallback to BAC for our first level of secure messaging.
 If PACE is supported, we use PACE to authenticate to the e-passport, otherwise we use BAC.
 

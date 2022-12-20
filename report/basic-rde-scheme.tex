@@ -18,10 +18,10 @@ During decryption, the recipient uses the \textit{decryption parameters} togethe
 
 A high-level overview of this scheme is shown in Figure~\ref{fig:basic-rde-scheme}.
 \begin{figure}
-\centering
-\includegraphics[width=0.8\textwidth]{imgs/RDE overview}
-\caption{High-level overview of the basic RDE scheme.}
-\label{fig:basic-rde-scheme}
+    \centering
+    \includegraphics[width=0.8\textwidth]{imgs/RDE overview}
+    \caption{High-level overview of the basic RDE scheme.}
+    \label{fig:basic-rde-scheme}
 \end{figure}
 
 \section{E-passports}
@@ -57,7 +57,7 @@ After BAC, further communication with the passport is encrypted using the 3DES a
 \subsubsection{Password Authenticated Connection Establishment (PACE)}\label{subsubsec:password-authenticated-connection-establishment}
 A second and more modern way for this first level of security is Password Authenticated Connection Establishment (PACE).
 PACE first performs a (Elliptic Curve) Diffie-Hellman key exchange to generate a session key, which is then used to encrypt the communication.
-Authentication is then still done with the BAC key derived from the MRZ data (or on certain passports, with the Card Access Number (CAN) that is printed on the passport).
+Authentication is then still done with the BAC key derived from the MRZ data (or on certain passports, with the Card Access Number (CAN), a six-digit number that is printed on the passport).
 According to the ICAO standard, PACE is the preferred method for setting up a secure messaging channel as it is more secure than BAC.
 BAC should only be used as fallback when PACE is not supported by the passport~\cite{icao9303securitymechanisms}.
 Note that on the most recent Dutch passports, BAC is no longer supported and PACE must be used for the first level of security.
@@ -140,6 +140,11 @@ RDE is based on this idea.
 \end{enumerate}
 
 For deriving the secret key from the ciphertext response, we simply take a hash of the ciphertext.
+
+Note that only the sender and e-passport are able to generate this ciphertext, as only they are able to construct the correct encryption keys.
+The e-passport can do this, because it possesses the private CA key (securely stored in its chip) and knows the public key from the sender.
+The sender can do this, because it possesses the sender private key that it generated themselves and knows the public key from the passport.
+Any other party, however, does not possess any of the private keys and is thus not able to perform the ECDH key agreement.
 
 For further details on the RDE protocol, we refer to the explanation provided in~\cite{verheul2017remote}.
 A schematic of the decryption process is shown in Figure~\ref{fig:rde-decryption}.

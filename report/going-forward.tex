@@ -48,14 +48,14 @@ It is almost certain that these documents can be used for RDE as well (with mini
 The current implementation allows senders to choose to encrypt a transfer for a single e-passport.
 There might, however, be applications where it is useful to encrypt for multiple e-passports.
 For example, if a transfer should be available to multiple people, but perhaps more importantly, if one person should be able to decrypt a transfer with either one of his documents (passport, identity card, driver's license).
-This could greatly improve usability. 
+This could greatly improve usability.
 In order to achieve this, the integration of RDE within the encryption scheme of FileSender should be changed.
 Instead of using the secret key from RDE directly for encrypting the files (after PBKDF2), files instead should be encrypted with a different key, and the RDE secret key should in its turn encrypt this key.
 This way, multiple RDE keys can be generated, all to encrypt the file encryption key, so that multiple documents can ultimately decrypt the same transferred files.
 
 When such changes are made to the FileSender integration, it would also be beneficial to not use PBKDF2 at all for RDE, as it is not required and does not truly offer additional security.
 
- \section{Support for more ciphers}
+\section{Support for more ciphers}
 \label{sec:support-for-more-ciphers}
 Currently, the response emulation in RDE key generation step only supports ECDH for Chip Authentication key agreement with AES based ciphers after the key agreement.
 This covers by far the most commonly used passports.
