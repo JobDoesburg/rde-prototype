@@ -3,7 +3,7 @@ This repository contains simple docker-compose configuration for the proof-of-co
 It contains submodules for different components of the RDE prototype. 
 Most notably, it enables a demo page that shows the RDE prototype in action (not implemented for a specific application).
 
-This repository does not include the RDE Android app that is required to use the RDE prototype.
+Note that for the purpose of the demo, this repository contains a pre-built debug APK of the RDE Android app.
 The source code for the RDE Android app can be found at [https://gitlab.surf.nl/filesender/rde-client-android](https://gitlab.surf.nl/filesender/rde-client-android).
 
 ## Components
