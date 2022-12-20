@@ -19,7 +19,7 @@ The RDE prototype consists of the following components:
 2. Clone this repository: `git clone --recursive git@gitlab.surf.nl:filesender/rde-prototype.git`
 3. Verify the configuration in `docker-compose.yml`.
 4. Generate the required certificates (see below).
-5. Start all services: `docker-compose up -d`
+5. Start all services: `docker-compose up -d --build` (`--build` is only required the first time, or when the configuration changes to force building new containers).
 
 ## Configuration
 The configuration of the RDE prototype is done in the `docker-compose.yml` file.
