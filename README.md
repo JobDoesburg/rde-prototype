@@ -6,6 +6,8 @@ Most notably, it enables a demo page that shows the RDE prototype in action (not
 Note that for the purpose of the demo, this repository contains a pre-built debug APK of the RDE Android app.
 The source code for the RDE Android app can be found at [https://gitlab.surf.nl/filesender/rde-client-android](https://gitlab.surf.nl/filesender/rde-client-android).
 
+Also note that a pre-built version of the report is included. If the LaTeX sources change, this should be recompiled.
+
 ## Components
 The RDE prototype consists of the following components:
 - [RDE keyserver](https://gitlab.surf.nl/filesender/rde-keyserver), which is used to store enrolled RDE keys for user identities, using email addresses via SAML, and make them available via a REST API.
