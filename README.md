@@ -4,21 +4,21 @@ It contains submodules for different components of the RDE prototype.
 Most notably, it enables a demo page that shows the RDE prototype in action (not implemented for a specific application).
 
 Note that for the purpose of the demo, this repository contains a pre-built debug APK of the RDE Android app.
-The source code for the RDE Android app can be found at [https://gitlab.surf.nl/filesender/rde-client-android](https://gitlab.surf.nl/filesender/rde-client-android).
+The source code for the RDE Android app can be found at [https://github.com/JobDoesburg/rde-client-android](https://github.com/JobDoesburg/rde-client-android).
 
 Also note that a pre-built version of the report is included. If the LaTeX sources change, this should be recompiled.
 
 ## Components
 The RDE prototype consists of the following components:
-- [RDE keyserver](https://gitlab.surf.nl/filesender/rde-keyserver), which is used to store enrolled RDE keys for user identities, using email addresses via SAML, and make them available via a REST API.
-- [RDE client proxyserver](https://gitlab.surf.nl/filesender/rde-client-proxyserver), which is used to enable communication between a RDE browser client and the RDE Android client app.
-- [RDE Android client app](https://gitlab.surf.nl/filesender/rde-client-android), which is used to actually communicate with RDE documents: enroll them and use them to retrieve keys. This app, in its turn, uses the [RDE Java client library](https://gitlab.surf.nl/filesender/rde-java-client) (written in Kotlin). As this is an Android app, it is not included as a submodule in this repository.
-- [RDE JS client library](https://gitlab.surf.nl/filesender/rde-js-client) (written in TypeScript), which consists of two modules, one for generating RDE keys and one for interacting with the RDE Android client app.
-- [RDE demo](https://gitlab.surf.nl/filesender/rde-prototype/-/tree/main/rde-demo), a demo website that uses the RDE JS client library to generate RDE keys and interact with the RDE Android client app to retrieve them again.
+- [RDE keyserver](https://github.com/JobDoesburg/rde-keyserver), which is used to store enrolled RDE keys for user identities, using email addresses via SAML, and make them available via a REST API.
+- [RDE client proxyserver](https://github.com/JobDoesburg/rde-client-proxyserver), which is used to enable communication between a RDE browser client and the RDE Android client app.
+- [RDE Android client app](https://github.com/JobDoesburg/rde-client-android), which is used to actually communicate with RDE documents: enroll them and use them to retrieve keys. This app, in its turn, uses the [RDE Java client library](https://github.com/JobDoesburg/rde-java-client) (written in Kotlin). As this is an Android app, it is not included as a submodule in this repository.
+- [RDE JS client library](https://github.com/JobDoesburg/rde-js-client) (written in TypeScript), which consists of two modules, one for generating RDE keys and one for interacting with the RDE Android client app.
+- [RDE demo](https://github.com/JobDoesburg/rde-prototype/-/tree/main/rde-demo), a demo website that uses the RDE JS client library to generate RDE keys and interact with the RDE Android client app to retrieve them again.
 
 ## Installation
 1. Install docker and docker-compose: `sudo apt install docker docker-compose`
-2. Clone this repository: `git clone --recursive git@gitlab.surf.nl:filesender/rde-prototype.git`
+2. Clone this repository: `git clone --recursive git@github.com:JobDoesburg/rde-prototype.git`
 3. Verify the configuration in `docker-compose.yml`.
 4. Generate the required certificates (see below).
 5. Start all services: `docker-compose up -d --build` (`--build` is only required the first time, or when the configuration changes to force building new containers).
@@ -59,7 +59,7 @@ A sample command to generate these files is `openssl req -x509 -newkey rsa:4096 
 The keyserver uses an SQLite database. This can be mounted at `/code/keyserver/db.sqlite3` in the container for persistent storage. 
 The configuration in this repository mounts a file for this purpose, but this can be changed to a volume (or with minimal changes to the keyserver, a separate database container).
 
-For more information, see the [RDE keyserver](https://gitlab.surf.nl/filesender/rde-keyserver) repository.
+For more information, see the [RDE keyserver](https://github.com/JobDoesburg/rde-keyserver) repository.
 
 ### Nginx proxy and SSL
 The RDE prototype uses nginx as a reverse proxy for the demo, keyserver and proxyserver.
