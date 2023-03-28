@@ -7,3 +7,6 @@
 [submodule "rde-demo/rde-js-client"]
 	path = rde-demo/rde-js-client
 	url = git@github.com:JobDoesburg/rde-js-client.git
+[submodule "rde-android-client-app"]
+	path = rde-android-client-app
+	url = git@github.com:JobDoesburg/rde-android-client-app.git
